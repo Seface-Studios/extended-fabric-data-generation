@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "extended-fabric-data-generation-testmod",
+  "name": "Extended Fabric Data Generation Test Mod",
+  "version": "1.0.0",
+  "environment": "*",
+  "license": "Apache-2.0",
+  "depends": {},
+  "entrypoints": {
+    "main": ["net.sefacestudios.testmod.TestMod"],
+    "fabric-datagen": ["net.sefacestudios.testmod.datagen.Main"]
+  }
+}

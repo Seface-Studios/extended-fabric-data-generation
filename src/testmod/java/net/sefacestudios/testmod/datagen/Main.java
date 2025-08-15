@@ -1,0 +1,18 @@
+package net.sefacestudios.testmod.datagen;
+
+import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.sefacestudios.datagenextras.core.utils.ForgedModLoaders;
+import net.sefacestudios.testmod.TestMod;
+import net.sefacestudios.testmod.datagen.provider.ModForgeBiomeModifierProvider;
+
+public class Main implements DataGeneratorEntrypoint {
+
+  @Override
+  public void onInitializeDataGenerator(FabricDataGenerator datagen) {
+    final FabricDataGenerator.Pack pack = datagen.createPack();
+
+    pack.addProvider(ModForgeBiomeModifierProvider::new);
+    pack.addProvider((output, registriesFuture) -> new ModForgeBiomeModifierProvider(output, registriesFuture).setForgedModLoader(ForgedModLoaders.NEOFORGE));
+  }
+}

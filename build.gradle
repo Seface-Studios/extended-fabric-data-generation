@@ -1,0 +1,46 @@
+plugins {
+  id 'java'
+  id "fabric-loom" version "${fabric_loom_version}"
+}
+
+group = 'net.sefacestudios'
+version = '1.0-SNAPSHOT'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  minecraft "com.mojang:minecraft:${minecraft_version}"
+  mappings loom.officialMojangMappings()
+
+  modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+  modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+}
+
+sourceSets {
+  testmod {
+    compileClasspath += main.compileClasspath
+    runtimeClasspath += main.runtimeClasspath
+    
+    // Adicionar o sourceSet main como dependência
+    compileClasspath += main.output
+    runtimeClasspath += main.output
+    
+    resources {
+      srcDirs("src/testmod/generated")
+    }
+  }
+}
+
+fabricApi {
+  configureDataGeneration((settings) -> {
+    settings.client = true
+    settings.getOutputDirectory().set(project(":").file("src/testmod/generated"))
+  })
+}
+
+runDatagen {
+  outputs.dir file("src/testmod/generated")
+  classpath += sourceSets.testmod.runtimeClasspath
+}
