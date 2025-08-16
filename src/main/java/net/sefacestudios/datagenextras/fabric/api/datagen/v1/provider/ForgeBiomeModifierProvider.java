@@ -12,7 +12,6 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.sefacestudios.datagenextras.core.modifiers.ForgedBiomeModifier;
-import net.sefacestudios.datagenextras.core.modifiers.ForgedBiomeModifierHolder;
 import net.sefacestudios.datagenextras.core.utils.ForgedModLoaders;
 
 import java.nio.file.Path;
@@ -39,7 +38,7 @@ public abstract class ForgeBiomeModifierProvider implements DataProvider {
     return this;
   }
 
-  public abstract void generate(HolderLookup.Provider registryLookup, Consumer<ForgedBiomeModifierHolder> consumer);
+  public abstract void generate(HolderLookup.Provider registryLookup, Consumer<ForgedBiomeModifier> consumer);
 
   @Override
   public CompletableFuture<?> run(CachedOutput writer) {
@@ -47,20 +46,20 @@ public abstract class ForgeBiomeModifierProvider implements DataProvider {
 
     return this.registryLookup.thenCompose(lookup -> {
       final Set<ResourceLocation> identifiers = Sets.newHashSet();
-      final Set<ForgedBiomeModifierHolder> biomeModifiers = Sets.newHashSet();
+      final Set<ForgedBiomeModifier> biomeModifiers = Sets.newHashSet();
 
       this.generate(lookup, biomeModifiers::add);
 
       RegistryOps<JsonElement> ops = lookup.createSerializationContext(JsonOps.INSTANCE);
       final List<CompletableFuture<?>> futures = new ArrayList<>();
 
-      for (ForgedBiomeModifierHolder biomeModifier : biomeModifiers) {
-        if (!identifiers.add(biomeModifier.id())) {
-          throw new IllegalStateException("Duplicate biome modifier " + biomeModifier.id());
+      for (ForgedBiomeModifier biomeModifier : biomeModifiers) {
+        if (!identifiers.add(biomeModifier.getId())) {
+          throw new IllegalStateException("Duplicate biome modifier " + biomeModifier.getId());
         }
 
         JsonObject biomeModifierJson = ForgedBiomeModifier.CODEC
-          .encodeStart(ops, biomeModifier.value())
+          .encodeStart(ops, biomeModifier)
           .getOrThrow(IllegalStateException::new).getAsJsonObject();
 
         futures.add(DataProvider.saveStable(writer, biomeModifierJson, getOutputPath(biomeModifier)));
@@ -70,8 +69,8 @@ public abstract class ForgeBiomeModifierProvider implements DataProvider {
     });
   }
 
-  private Path getOutputPath(ForgedBiomeModifierHolder biomeModifier) {
-    return pathResolver.json(biomeModifier.id());
+  private Path getOutputPath(ForgedBiomeModifier biomeModifier) {
+    return pathResolver.json(biomeModifier.getId());
   }
 
   @Override

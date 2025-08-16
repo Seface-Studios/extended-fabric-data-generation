@@ -1,0 +1,9 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "minecraft:forest",
+    "minecraft:birch_forest"
+  ],
+  "feature": "minecraft:flower_plain",
+  "step": "vegetal_decoration"
+}

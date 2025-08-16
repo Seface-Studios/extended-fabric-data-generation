@@ -1,51 +1,72 @@
 package net.sefacestudios.datagenextras.core.modifiers;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.Criterion;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.sefacestudios.datagenextras.core.utils.ForgedModLoaders;
 
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 public record ForgedBiomeModifier(
   ForgedBiomeModifierType type,
-  HolderSet<Biome> biomes,
+  Either<TagKey<Biome>, Either<ResourceKey<Biome>, List<ResourceKey<Biome>>>> biomes,
   ResourceLocation feature,
-  GenerationStep.Decoration step) {
+  GenerationStep.Decoration step
+) {
+
+  public static final Codec<Either<TagKey<Biome>, Either<ResourceKey<Biome>, List<ResourceKey<Biome>>>>> BIOMES_CODEC =
+    Codec.either(Codec.STRING.xmap(
+        (str) -> {
+          if (str.startsWith("#")) {
+            ResourceLocation location = ResourceLocation.tryParse(str.substring(1));
+            if (location != null) {
+              return TagKey.create(Registries.BIOME, location);
+            }
+          }
+          throw new IllegalArgumentException("Invalid tag format: " + str);
+        },
+        tagKey -> "#" + tagKey.location()
+      ),
+      Codec.either(ResourceKey.codec(Registries.BIOME), ResourceKey.codec(Registries.BIOME).listOf())
+    );
 
   public static Codec<ForgedBiomeModifier> CODEC = RecordCodecBuilder.create((instance) -> {
     return instance.group(
       ForgedBiomeModifierType.CODEC.fieldOf("type").forGetter(ForgedBiomeModifier::type),
-      Biome.LIST_CODEC.fieldOf("biomes").forGetter(ForgedBiomeModifier::biomes),
+      ForgedBiomeModifier.BIOMES_CODEC.fieldOf("biomes").forGetter(ForgedBiomeModifier::biomes),
       ResourceLocation.CODEC.fieldOf("feature").forGetter(ForgedBiomeModifier::feature),
       GenerationStep.Decoration.CODEC.fieldOf("step").forGetter(ForgedBiomeModifier::step)
     ).apply(instance, ForgedBiomeModifier::new);
   });
 
+  public ResourceLocation getId() {
+    return this.feature;
+  }
+
   public static class Builder {
-    private ForgedModLoaders loader;
+    private final ForgedModLoaders loader;
 
     private ForgedBiomeModifierType type;
-    private HolderSet<Biome> biomes;
+    private Either<TagKey<Biome>, Either<ResourceKey<Biome>, List<ResourceKey<Biome>>>> biomes;
     private ResourceLocation feature;
     private GenerationStep.Decoration step;
 
     public Builder(ForgedModLoaders loader) {
       this.loader = loader;
       this.type = ForgedBiomeModifierTypes.ADD_FEATURES.appendModLoaderPrefix(this.loader);
-      this.biomes = HolderSet.empty();
       this.step = GenerationStep.Decoration.VEGETAL_DECORATION;
     }
 
@@ -58,8 +79,19 @@ public record ForgedBiomeModifier(
       return this;
     }
 
-    public Builder biomes(HolderSet<Biome> value) {
-      this.biomes = value;
+    public Builder biomes(ResourceKey<Biome> value) {
+      this.biomes = Either.right(Either.left(value));
+      return this;
+    }
+
+    public Builder biomes(ResourceKey<Biome> ...values) {
+      List<ResourceKey<Biome>> biomeList = Arrays.asList(values);
+      this.biomes = Either.right(Either.right(biomeList));
+      return this;
+    }
+
+    public Builder biomes(TagKey<Biome> value) {
+      this.biomes = Either.left(value);
       return this;
     }
 
@@ -73,14 +105,14 @@ public record ForgedBiomeModifier(
       return this;
     }
 
-    public ForgedBiomeModifierHolder build() {
-      return new ForgedBiomeModifierHolder(this.feature, new ForgedBiomeModifier(this.type, this.biomes, this.feature, this.step));
+    public ForgedBiomeModifier build() {
+      return new ForgedBiomeModifier(this.type, this.biomes, this.feature, this.step);
     }
 
-    public ForgedBiomeModifierHolder save(Consumer<ForgedBiomeModifierHolder> consumer) {
-      ForgedBiomeModifierHolder holder = this.build();
-      consumer.accept(holder);
-      return holder;
+    public ForgedBiomeModifier save(Consumer<ForgedBiomeModifier> consumer) {
+      ForgedBiomeModifier modifier = this.build();
+      consumer.accept(modifier);
+      return modifier;
     }
   }
 }

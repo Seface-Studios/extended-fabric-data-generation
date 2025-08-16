@@ -1,6 +1,0 @@
-{
-  "type": "forge:remove_features",
-  "biomes": [],
-  "feature": "minecraft:flower_pale_garden",
-  "step": "vegetal_decoration"
-}

@@ -1,6 +1,6 @@
 {
   "type": "neoforge:add_features",
-  "biomes": [],
+  "biomes": "minecraft:plains",
   "feature": "minecraft:bamboo_no_podzol",
   "step": "vegetal_decoration"
 }
