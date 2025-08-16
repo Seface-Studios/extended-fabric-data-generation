@@ -1,9 +1,8 @@
-package net.sefacestudios.datagenextras.fabric.api.datagen.v1.provider;
+package net.sefacestudios.datagenextras.fabric.api.datagen.v1.provider.forge;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.sefacestudios.datagenextras.core.utils.ForgedModLoaders;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 

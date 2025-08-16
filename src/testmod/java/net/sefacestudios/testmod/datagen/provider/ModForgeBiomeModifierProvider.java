@@ -8,7 +8,7 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.sefacestudios.datagenextras.core.modifiers.ForgedBiomeModifier;
 import net.sefacestudios.datagenextras.core.modifiers.ForgedBiomeModifierTypes;
-import net.sefacestudios.datagenextras.fabric.api.datagen.v1.provider.ForgeBiomeModifierProvider;
+import net.sefacestudios.datagenextras.fabric.api.datagen.v1.provider.forge.ForgeBiomeModifierProvider;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;

@@ -1,4 +1,4 @@
-package net.sefacestudios.datagenextras.fabric.api.datagen.v1.provider;
+package net.sefacestudios.datagenextras.fabric.api.datagen.v1.provider.forge;
 
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
