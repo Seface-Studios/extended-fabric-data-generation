@@ -1,8 +1,8 @@
-package net.sefacestudios.datagenextras.core.modifiers;
+package net.sefacestudios.datagen_extras.modifiers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import net.sefacestudios.datagenextras.core.utils.ForgedModLoaders;
+import net.sefacestudios.datagen_extras.utils.ForgedModLoaders;
 
 public class ForgedBiomeModifierType {
   public static Codec<ForgedBiomeModifierType> CODEC = Codec.STRING.comapFlatMap(ForgedBiomeModifierType::read, ForgedBiomeModifierType::getId).stable();

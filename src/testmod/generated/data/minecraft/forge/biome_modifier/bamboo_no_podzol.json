@@ -1,6 +1,0 @@
-{
-  "type": "forge:add_features",
-  "biomes": "minecraft:plains",
-  "feature": "minecraft:bamboo_no_podzol",
-  "step": "vegetal_decoration"
-}

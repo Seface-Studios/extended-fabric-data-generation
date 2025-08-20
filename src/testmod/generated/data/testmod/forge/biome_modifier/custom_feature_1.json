@@ -1,6 +1,6 @@
 {
   "type": "forge:add_features",
   "biomes": "#minecraft:is_forest",
-  "feature": "minecraft:flower_default",
+  "feature": "testmod:custom_feature_1",
   "step": "vegetal_decoration"
 }

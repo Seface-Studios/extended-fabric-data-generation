@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "id": "extended-fabric-data-generation-testmod",
-  "name": "Extended Fabric Data Generation Test Mod",
+  "id": "testmod",
+  "name": "Test Mod",
   "version": "1.0.0",
   "environment": "*",
   "license": "Apache-2.0",

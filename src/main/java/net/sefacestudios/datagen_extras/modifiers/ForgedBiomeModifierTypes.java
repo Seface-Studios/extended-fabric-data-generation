@@ -1,4 +1,4 @@
-package net.sefacestudios.datagenextras.core.modifiers;
+package net.sefacestudios.datagen_extras.modifiers;
 
 public class ForgedBiomeModifierTypes {
   public static ForgedBiomeModifierType NONE = ForgedBiomeModifierType.create("none");

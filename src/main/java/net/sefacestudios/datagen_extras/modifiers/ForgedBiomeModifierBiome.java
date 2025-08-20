@@ -1,4 +1,4 @@
-package net.sefacestudios.datagenextras.core.modifiers;
+package net.sefacestudios.datagen_extras.modifiers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;

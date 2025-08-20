@@ -1,24 +1,23 @@
-package net.sefacestudios.datagenextras.fabric.api.datagen.v1.provider.worldgen;
+package net.sefacestudios.datagen_extras.provider.worldgen;
 
-import net.minecraft.core.HolderGetter;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.FeatureConfig;
+import net.minecraft.world.gen.feature.PlacedFeature;
+import net.minecraft.world.gen.placementmodifier.PlacementModifier;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FeatureProvider<FC extends FeatureConfiguration> {
-  private HolderGetter<ConfiguredFeature<?, ?>> holder;
+public abstract class FeatureProvider<FC extends FeatureConfig> {
+  private Registry<ConfiguredFeature<?, ?>> holder;
   private final Feature<FC> feature;
   private List<PlacementModifier> modifiers;
 
-  private ResourceKey<PlacedFeature> placedFeatureKey;
-  private ResourceKey<ConfiguredFeature<?, ?>> configuredFeatureKey;
+  private RegistryKey<PlacedFeature> placedFeatureKey;
+  private RegistryKey<ConfiguredFeature<?, ?>> configuredFeatureKey;
 
   protected FeatureProvider(Feature<FC> feature) {
     this.feature = feature;
@@ -37,13 +36,13 @@ public abstract class FeatureProvider<FC extends FeatureConfiguration> {
   protected abstract FC configuration();
 
   @SuppressWarnings("unchecked")
-  public <T extends FeatureProvider<?>> T setPlacedFeatureKey(ResourceKey<PlacedFeature> key) {
+  public <T extends FeatureProvider<?>> T setPlacedFeatureKey(RegistryKey<PlacedFeature> key) {
     this.placedFeatureKey = key;
     return (T) this;
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends FeatureProvider<?>> T setConfiguredFeatureKey(ResourceKey<ConfiguredFeature<?, ?>> key) {
+  public <T extends FeatureProvider<?>> T setConfiguredFeatureKey(RegistryKey<ConfiguredFeature<?, ?>> key) {
     this.configuredFeatureKey = key;
     return (T) this;
   }

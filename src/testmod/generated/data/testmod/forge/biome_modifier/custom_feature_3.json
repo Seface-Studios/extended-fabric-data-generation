@@ -1,0 +1,9 @@
+{
+  "type": "forge:add_features",
+  "biomes": [
+    "minecraft:badlands",
+    "minecraft:desert"
+  ],
+  "feature": "testmod:custom_feature_3",
+  "step": "vegetal_decoration"
+}

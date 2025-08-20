@@ -1,5 +1,6 @@
 plugins {
   id 'java'
+  id 'java-library'
   id "fabric-loom" version "${fabric_loom_version}"
 }
 
@@ -8,11 +9,12 @@ version = '1.0-SNAPSHOT'
 
 repositories {
   mavenCentral()
+  maven { url 'https://jitpack.io' }
 }
 
 dependencies {
   minecraft "com.mojang:minecraft:${minecraft_version}"
-  mappings loom.officialMojangMappings()
+  mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
   modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
   modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
@@ -22,11 +24,11 @@ sourceSets {
   testmod {
     compileClasspath += main.compileClasspath
     runtimeClasspath += main.runtimeClasspath
-    
+
     // Adicionar o sourceSet main como dependência
     compileClasspath += main.output
     runtimeClasspath += main.output
-    
+
     resources {
       srcDirs("src/testmod/generated")
     }
@@ -43,4 +45,15 @@ fabricApi {
 runDatagen {
   outputs.dir file("src/testmod/generated")
   classpath += sourceSets.testmod.runtimeClasspath
+
+  // Configurações para evitar problemas de AccessWidener
+  systemProperty "fabric-api.datagen", "true"
+  systemProperty "fabric-api.datagen.output-dir", file("src/testmod/generated").absolutePath
+  systemProperty "fabric-api.datagen.modid", "testmod"
+}
+
+// Configuração para JitPack
+java {
+  withSourcesJar()
+  withJavadocJar()
 }

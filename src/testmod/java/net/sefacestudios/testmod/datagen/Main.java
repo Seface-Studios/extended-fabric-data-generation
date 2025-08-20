@@ -2,8 +2,7 @@ package net.sefacestudios.testmod.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.sefacestudios.datagenextras.core.utils.ForgedModLoaders;
-import net.sefacestudios.testmod.TestMod;
+import net.sefacestudios.datagen_extras.utils.ForgedModLoaders;
 import net.sefacestudios.testmod.datagen.provider.ModForgeBiomeModifierProvider;
 
 public class Main implements DataGeneratorEntrypoint {

@@ -1,4 +1,4 @@
-package net.sefacestudios.datagenextras.core.utils;
+package net.sefacestudios.datagen_extras.utils;
 
 public enum ForgedModLoaders {
   FORGE(0, "forge", "Minecraft Forge"),
