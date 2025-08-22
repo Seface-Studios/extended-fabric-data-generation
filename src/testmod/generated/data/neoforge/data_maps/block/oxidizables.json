@@ -1,0 +1,10 @@
+{
+  "values": {
+    "minecraft:copper_block": {
+      "next_oxidation_stage": "minecraft:weathered_copper"
+    },
+    "minecraft:weathered_copper": {
+      "next_oxidation_stage": "minecraft:exposed_copper"
+    }
+  }
+}

@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.sefacestudios.datagen_extras.utils.ForgedModLoaders;
 import net.sefacestudios.testmod.datagen.provider.ModForgeBiomeModifierProvider;
+import net.sefacestudios.testmod.datagen.provider.ModCopperBehaviorDataMapProvider;
 
 public class Main implements DataGeneratorEntrypoint {
 
@@ -11,6 +12,7 @@ public class Main implements DataGeneratorEntrypoint {
   public void onInitializeDataGenerator(FabricDataGenerator datagen) {
     final FabricDataGenerator.Pack pack = datagen.createPack();
 
+    pack.addProvider(ModCopperBehaviorDataMapProvider::new);
     pack.addProvider(ModForgeBiomeModifierProvider::new);
     pack.addProvider((output, registriesFuture) -> new ModForgeBiomeModifierProvider(output, registriesFuture).setForgedModLoader(ForgedModLoaders.NEOFORGE));
   }

@@ -1,6 +1,6 @@
 {
   "type": "neoforge:add_features",
   "biomes": "#minecraft:is_forest",
-  "feature": "testmod:custom_feature_1",
+  "features": "testmod:custom_feature_1",
   "step": "vegetal_decoration"
 }

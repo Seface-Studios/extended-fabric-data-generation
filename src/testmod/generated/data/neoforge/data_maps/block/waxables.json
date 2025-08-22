@@ -1,0 +1,10 @@
+{
+  "values": {
+    "minecraft:exposed_copper": {
+      "waxed": "minecraft:weathered_copper"
+    },
+    "minecraft:weathered_copper": {
+      "waxed": "minecraft:copper_block"
+    }
+  }
+}

@@ -10,14 +10,27 @@ version = project_version
 repositories {
   mavenCentral()
   maven { url 'https://jitpack.io' }
+
+  maven {
+    name = "ParchmentMC"
+    url = uri("https://maven.parchmentmc.org")
+    content {
+      includeGroupAndSubgroups("org.parchmentmc")
+    }
+  }
 }
 
 dependencies {
   minecraft "com.mojang:minecraft:${minecraft_version}"
-  mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
-  modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-  modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+  mappings(loom.layered() {
+    officialMojangMappings()
+    parchment("org.parchmentmc.data:parchment-${minecraft_version}:2025.03.23@zip")
+    //mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+  })
+
+  modApi "net.fabricmc:fabric-loader:${fabric_loader_version}"
+  modApi "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 }
 
 sourceSets {
@@ -47,9 +60,9 @@ runDatagen {
   classpath += sourceSets.testmod.runtimeClasspath
 
   // Configurações para evitar problemas de AccessWidener
-  systemProperty "fabric-api.datagen", "true"
+  /*systemProperty "fabric-api.datagen", "true"
   systemProperty "fabric-api.datagen.output-dir", file("src/testmod/generated").absolutePath
-  systemProperty "fabric-api.datagen.modid", "testmod"
+  systemProperty "fabric-api.datagen.modid", "testmod"*/
 }
 
 // Configuração para JitPack

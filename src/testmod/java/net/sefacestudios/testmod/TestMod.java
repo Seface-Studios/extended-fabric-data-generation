@@ -1,9 +1,9 @@
 package net.sefacestudios.testmod;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,11 +15,11 @@ public class TestMod implements ModInitializer {
   @Override
   public void onInitialize() {}
 
-  public static Identifier id(String path) {
-    return Identifier.of(MOD_ID, path);
+  public static ResourceLocation id(String path) {
+    return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
   }
 
-  public static <T> RegistryKey<T> key(RegistryKey<? extends Registry<T>> registry, String path) {
-    return RegistryKey.of(registry, TestMod.id(path));
+  public static <T> ResourceKey<T> key(ResourceKey<? extends Registry<T>> registry, String path) {
+    return ResourceKey.create(registry, TestMod.id(path));
   }
 }

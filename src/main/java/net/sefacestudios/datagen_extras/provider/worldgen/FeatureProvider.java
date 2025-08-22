@@ -1,23 +1,26 @@
 package net.sefacestudios.datagen_extras.provider.worldgen;
 
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.FeatureConfig;
-import net.minecraft.world.gen.feature.PlacedFeature;
-import net.minecraft.world.gen.placementmodifier.PlacementModifier;
+
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FeatureProvider<FC extends FeatureConfig> {
-  private Registry<ConfiguredFeature<?, ?>> holder;
+public abstract class FeatureProvider<FC extends FeatureConfiguration> {
+  private HolderGetter<ConfiguredFeature<?, ?>> holder;
   private final Feature<FC> feature;
   private List<PlacementModifier> modifiers;
 
-  private RegistryKey<PlacedFeature> placedFeatureKey;
-  private RegistryKey<ConfiguredFeature<?, ?>> configuredFeatureKey;
+  private ResourceKey<PlacedFeature> placedFeatureKey;
+  private ResourceKey<ConfiguredFeature<?, ?>> configuredFeatureKey;
 
   protected FeatureProvider(Feature<FC> feature) {
     this.feature = feature;
@@ -25,24 +28,24 @@ public abstract class FeatureProvider<FC extends FeatureConfig> {
   }
 
   /**
-   * All the placed feature configuration for this feature.
+   * All the placed features configuration for this features.
    * @param modifiers The modifiers;
    */
   protected abstract void placed(List<PlacementModifier> modifiers);
 
   /**
-   * All the configured feature configuration for this feature.
+   * All the configured features configuration for this features.
    */
   protected abstract FC configuration();
 
   @SuppressWarnings("unchecked")
-  public <T extends FeatureProvider<?>> T setPlacedFeatureKey(RegistryKey<PlacedFeature> key) {
+  public <T extends FeatureProvider<?>> T setPlacedFeatureKey(ResourceKey<PlacedFeature> key) {
     this.placedFeatureKey = key;
     return (T) this;
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends FeatureProvider<?>> T setConfiguredFeatureKey(RegistryKey<ConfiguredFeature<?, ?>> key) {
+  public <T extends FeatureProvider<?>> T setConfiguredFeatureKey(ResourceKey<ConfiguredFeature<?, ?>> key) {
     this.configuredFeatureKey = key;
     return (T) this;
   }
@@ -54,5 +57,24 @@ public abstract class FeatureProvider<FC extends FeatureConfig> {
 
   public ConfiguredFeature<?, ?> getConfiguredFeature() {
     return new ConfiguredFeature<>(this.feature, this.configuration());
+  }
+
+  /**
+   * Register the Placed Feature to the provider.
+   * @param context The bootstrap context to register the Placed Feature.
+   */
+  @Deprecated
+  public void registerPlaceFeature(BootstrapContext<PlacedFeature> context) {
+    this.holder = context.lookup(Registries.CONFIGURED_FEATURE);
+    context.register(this.placedFeatureKey, this.getPlacedFeature());
+  }
+
+  /**
+   * Register the Configured Feature to the provider.
+   * @param context The bootstrap context to register the Configured Feature.
+   */
+  @Deprecated
+  public void registerConfiguredFeature(BootstrapContext<ConfiguredFeature<?, ?>> context) {
+    context.register(this.configuredFeatureKey, this.getConfiguredFeature());
   }
 }

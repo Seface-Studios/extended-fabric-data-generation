@@ -4,6 +4,6 @@
     "minecraft:badlands",
     "minecraft:desert"
   ],
-  "feature": "testmod:custom_feature_3",
+  "features": "testmod:custom_feature_3",
   "step": "vegetal_decoration"
 }

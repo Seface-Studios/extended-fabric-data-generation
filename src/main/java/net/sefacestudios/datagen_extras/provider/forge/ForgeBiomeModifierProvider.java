@@ -5,12 +5,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.data.DataOutput;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.DataWriter;
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.Identifier;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceLocation;
 import net.sefacestudios.datagen_extras.modifiers.ForgedBiomeModifier;
 import net.sefacestudios.datagen_extras.utils.ForgedModLoaders;
 
@@ -23,12 +23,12 @@ import java.util.function.Consumer;
 
 public abstract class ForgeBiomeModifierProvider implements DataProvider {
   private final FabricDataOutput output;
-  private final CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup;
+  private final CompletableFuture<HolderLookup.Provider> registryLookup;
 
-  private DataOutput.PathResolver pathResolver;
+  private PackOutput.PathProvider pathResolver;
   protected ForgedModLoaders loader = ForgedModLoaders.FORGE;
 
-  public ForgeBiomeModifierProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
+  public ForgeBiomeModifierProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
     this.output = output;
     this.registryLookup = registryLookup;
   }
@@ -38,19 +38,19 @@ public abstract class ForgeBiomeModifierProvider implements DataProvider {
     return this;
   }
 
-  public abstract void generate(RegistryWrapper.WrapperLookup registryLookup, Consumer<ForgedBiomeModifier> consumer);
+  public abstract void generate(HolderLookup.Provider registryLookup, Consumer<ForgedBiomeModifier> consumer);
 
   @Override
-  public CompletableFuture<?> run(DataWriter writer) {
-    this.pathResolver = this.output.getResolver(DataOutput.OutputType.DATA_PACK, this.loader.getId() + "/biome_modifier");
+  public CompletableFuture<?> run(CachedOutput writer) {
+    this.pathResolver = this.output.createPathProvider(PackOutput.Target.DATA_PACK, this.loader.getId() + "/biome_modifier");
 
     return this.registryLookup.thenCompose(lookup -> {
-      final Set<Identifier> identifiers = Sets.newHashSet();
+      final Set<ResourceLocation> identifiers = Sets.newHashSet();
       final Set<ForgedBiomeModifier> modifiers = Sets.newHashSet();
 
       this.generate(lookup, modifiers::add);
 
-      RegistryOps<JsonElement> ops = lookup.getOps(JsonOps.INSTANCE);
+      RegistryOps<JsonElement> ops = lookup.createSerializationContext(JsonOps.INSTANCE);
       final List<CompletableFuture<?>> futures = new ArrayList<>();
 
       for (ForgedBiomeModifier modifier : modifiers) {
@@ -62,7 +62,7 @@ public abstract class ForgeBiomeModifierProvider implements DataProvider {
           .encodeStart(ops, modifier)
           .getOrThrow(IllegalStateException::new).getAsJsonObject();
 
-        futures.add(DataProvider.writeToPath(writer, biomeModifierJson, getOutputPath(modifier)));
+        futures.add(DataProvider.saveStable(writer, biomeModifierJson, getOutputPath(modifier)));
       }
 
       return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
@@ -70,7 +70,7 @@ public abstract class ForgeBiomeModifierProvider implements DataProvider {
   }
 
   private Path getOutputPath(ForgedBiomeModifier modifier) {
-    return pathResolver.resolveJson(modifier.getId());
+    return pathResolver.json(modifier.getId());
   }
 
   @Override

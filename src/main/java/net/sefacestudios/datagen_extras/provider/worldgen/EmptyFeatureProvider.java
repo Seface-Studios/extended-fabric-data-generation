@@ -1,14 +1,13 @@
 package net.sefacestudios.datagen_extras.provider.worldgen;
 
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.placementmodifier.PlacementModifier;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
 import java.util.List;
 
-public class EmptyFeatureProvider extends FeatureProvider<DefaultFeatureConfig> {
+public class EmptyFeatureProvider extends FeatureProvider<NoneFeatureConfiguration> {
 
-  protected EmptyFeatureProvider(Feature<DefaultFeatureConfig> feature) {
+  protected EmptyFeatureProvider(net.minecraft.world.level.levelgen.feature.Feature<NoneFeatureConfiguration> feature) {
     super(feature);
   }
 
@@ -16,7 +15,7 @@ public class EmptyFeatureProvider extends FeatureProvider<DefaultFeatureConfig> 
   protected void placed(List<PlacementModifier> modifiers) {}
 
   @Override
-  protected DefaultFeatureConfig configuration() {
-    return new DefaultFeatureConfig();
+  protected NoneFeatureConfiguration configuration() {
+    return new NoneFeatureConfiguration();
   }
 }
