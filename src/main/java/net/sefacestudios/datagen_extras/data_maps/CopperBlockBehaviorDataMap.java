@@ -18,7 +18,7 @@ public record CopperBlockBehaviorDataMap(CopperBehavior behavior, Block currentB
   public static Codec<CopperBlockBehaviorDataMap> CODEC = RecordCodecBuilder.create((instance) -> {
     return instance.group(
       COPPER_FUNC_CODEC.fieldOf("behavior").forGetter(CopperBlockBehaviorDataMap::behavior),
-      Block.CODEC.fieldOf("currentBlock").forGetter(CopperBlockBehaviorDataMap::currentBlock),
+      Block.CODEC.fieldOf("itemLike").forGetter(CopperBlockBehaviorDataMap::currentBlock),
       Block.CODEC.fieldOf("nextOrPreviousBlock").forGetter(CopperBlockBehaviorDataMap::nextOrPreviousBlock)
     ).apply(instance, CopperBlockBehaviorDataMap::new);
   });

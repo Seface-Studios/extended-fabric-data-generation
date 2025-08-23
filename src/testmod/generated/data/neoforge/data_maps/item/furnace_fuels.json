@@ -1,0 +1,10 @@
+{
+  "values": {
+    "minecraft:glow_berries": {
+      "burn_time": 20
+    },
+    "minecraft:stonecutter": {
+      "burn_time": 5
+    }
+  }
+}

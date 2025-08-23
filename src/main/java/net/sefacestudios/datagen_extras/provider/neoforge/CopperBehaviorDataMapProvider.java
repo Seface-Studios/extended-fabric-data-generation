@@ -97,6 +97,6 @@ public abstract class CopperBehaviorDataMapProvider implements DataProvider {
 
   @Override
   public String getName() {
-    return "Copper Block Behavior data map";
+    return "(NeoForge only) Data Maps/Copper Behavior";
   }
 }

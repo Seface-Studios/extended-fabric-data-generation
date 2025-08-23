@@ -1,0 +1,10 @@
+{
+  "values": {
+    "minecraft:acacia_boat": {
+      "chance": 0.25
+    },
+    "minecraft:acacia_log": {
+      "chance": 1.0
+    }
+  }
+}
