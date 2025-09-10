@@ -25,12 +25,13 @@ dependencies {
 
   mappings(loom.layered() {
     officialMojangMappings()
-    parchment("org.parchmentmc.data:parchment-${minecraft_version}:2025.03.23@zip")
+    parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchmentmc_version}@zip")
     //mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
   })
 
   modApi "net.fabricmc:fabric-loader:${fabric_loader_version}"
   modApi "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+  implementation "com.github.crowdin:crowdin-api-client-java:${crowdin_version}"
 }
 
 sourceSets {
@@ -59,10 +60,23 @@ runDatagen {
   outputs.dir file("src/testmod/generated")
   classpath += sourceSets.testmod.runtimeClasspath
 
-  // Configurações para evitar problemas de AccessWidener
-  /*systemProperty "fabric-api.datagen", "true"
-  systemProperty "fabric-api.datagen.output-dir", file("src/testmod/generated").absolutePath
-  systemProperty "fabric-api.datagen.modid", "testmod"*/
+  // Loads a private gradle.properties with the test API Token
+  def privateProperties = file(".gradle/gradle.properties")
+  def localProps = new Properties()
+
+  if (privateProperties.exists()) {
+    privateProperties.withInputStream { stream ->
+      localProps.load(stream)
+    }
+  }
+
+  def token = localProps.getProperty("crowdin_token")
+  def project_id = localProps.getProperty("crowdin_project_id")
+  def organization = localProps.getProperty("crowdin_organization")
+
+  environment "CROWDIN_TOKEN", token
+  environment "CROWDIN_PROJECT_ID", project_id
+  environment "CROWDIN_ORGANIZATION", organization
 }
 
 // Configuração para JitPack
