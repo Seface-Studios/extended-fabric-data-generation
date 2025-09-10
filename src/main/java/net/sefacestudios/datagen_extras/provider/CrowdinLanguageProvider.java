@@ -84,6 +84,7 @@ public class CrowdinLanguageProvider extends FabricLanguageProvider {
     Client client = new Client(credentials);
 
     // Preload all source strings
+    /* <stringId, <identifier, value>>*/
     Map<Long, Map.Entry<String, String>> sources = new HashMap<>();
     ListSourceStringsParams sourceOptions = ListSourceStringsParams.builder()
       .limit(500)
@@ -114,9 +115,17 @@ public class CrowdinLanguageProvider extends FabricLanguageProvider {
     translationsOptions.setLimit(500);
     translationsOptions.setOffset(0);
 
+    if (this.crowdinLanguageCode.equals("source")) {
+      for (Map.Entry<String, String> source : sources.values()) {
+        builder.add(source.getKey(), source.getValue());
+      }
+
+      return;
+    }
+
     while (true) {
       List<ResponseObject<LanguageTranslations>> translations = client.getStringTranslationsApi()
-        .listLanguageTranslations(PROJECT_ID, "pt-BR", translationsOptions)
+        .listLanguageTranslations(PROJECT_ID, this.crowdinLanguageCode, translationsOptions)
         .getData();
 
       if (translations.isEmpty()) break;
@@ -125,10 +134,7 @@ public class CrowdinLanguageProvider extends FabricLanguageProvider {
         PlainLanguageTranslations translation = (PlainLanguageTranslations) res.getData();
 
         String key = sources.get(translation.getStringId()).getKey();
-        String value = this.crowdinLanguageCode.equals("source")
-          ? sources.get(translation.getStringId()).getValue()
-          : translation.getText();
-
+        String value = translation.getText();
         User translator = translation.getUser();
 
         if (!this.contributors.contains(translator)) {

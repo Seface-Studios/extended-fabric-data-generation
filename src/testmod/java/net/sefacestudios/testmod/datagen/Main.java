@@ -27,16 +27,16 @@ public class Main implements DataGeneratorEntrypoint {
 
     pack.addProvider(CrowdinLanguageProvider::defaultLanguage);
     pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "pt_br", "pt-BR"));
-    //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "be_by", "be"));
-    //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "zn_cn", "zn-CN"));
-    //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "fr_fr", "fr"));
-    //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "de_de", "de"));
-    //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "it_it", "it"));
-    //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "ja_jp", "ja"));
-    //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "pl_pl", "pl"));
-    //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "ru_ru", "ru"));
-    //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "es_es", "es-ES"));
-    //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "tr_tr", "tr"));
-    //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "uk_ua", "uk"));
+    pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "be_by", "be"));
+    pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "zh_cn", "zh-CN"));
+    pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "fr_fr", "fr"));
+    pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "de_de", "de"));
+    pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "it_it", "it"));
+    pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "ja_jp", "ja"));
+    pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "pl_pl", "pl"));
+    pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "ru_ru", "ru"));
+    pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "es_es", "es-ES"));
+    pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "tr_tr", "tr"));
+    pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "uk_ua", "uk"));
   }
 }
