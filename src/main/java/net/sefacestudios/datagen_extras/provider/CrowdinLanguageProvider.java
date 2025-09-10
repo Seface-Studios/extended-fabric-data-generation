@@ -23,13 +23,13 @@ import java.util.concurrent.CompletableFuture;
 public class CrowdinLanguageProvider extends FabricLanguageProvider {
   private final List<User> contributors;
 
-  private final String token = System.getenv("CROWDIN_TOKEN");
-  private final Long projectId = Long.valueOf(System.getenv("CROWDIN_PROJECT_ID"));
-
-  private final String crowdinLanguageCode;
+  private static String TOKEN;
+  private static long PROJECT_ID;
 
   @Nullable
-  private final String organization = parseOrganization(System.getenv("CROWDIN_ORGANIZATION"));
+  private static String ORGANIZATION;
+
+  private final String crowdinLanguageCode;
 
   public CrowdinLanguageProvider(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup, String mcLanguageCode, String crowdinLanguageCode) {
     super(dataOutput, mcLanguageCode, registryLookup);
@@ -62,9 +62,25 @@ public class CrowdinLanguageProvider extends FabricLanguageProvider {
     return new CrowdinLanguageProvider(dataOutput, registryLookup, mcLanguageCode, crowdinLanguageCode);
   }
 
+  public static void setToken(String token) {
+    CrowdinLanguageProvider.TOKEN = token;
+  }
+
+  public static void setOrganization(String organization) {
+    CrowdinLanguageProvider.ORGANIZATION = parseOrganization(organization);
+  }
+
+  public static void setProjectId(String projectId) {
+    CrowdinLanguageProvider.PROJECT_ID = Long.parseLong(projectId);
+  }
+
+  public static void setProjectId(int projectId) {
+    CrowdinLanguageProvider.PROJECT_ID = projectId;
+  }
+
   @Override
   public void generateTranslations(HolderLookup.Provider provider, TranslationBuilder builder) {
-    Credentials credentials = new Credentials(this.token, this.organization);
+    Credentials credentials = new Credentials(TOKEN, ORGANIZATION);
     Client client = new Client(credentials);
 
     // Preload all source strings
@@ -76,7 +92,7 @@ public class CrowdinLanguageProvider extends FabricLanguageProvider {
 
     while (true) {
       List<ResponseObject<SourceString>> sourcePage = client.getSourceStringsApi()
-        .listSourceStrings(this.projectId, sourceOptions)
+        .listSourceStrings(PROJECT_ID, sourceOptions)
         .getData();
 
       if (sourcePage.isEmpty()) break;
@@ -100,7 +116,7 @@ public class CrowdinLanguageProvider extends FabricLanguageProvider {
 
     while (true) {
       List<ResponseObject<LanguageTranslations>> translations = client.getStringTranslationsApi()
-        .listLanguageTranslations(this.projectId, "pt-BR", translationsOptions)
+        .listLanguageTranslations(PROJECT_ID, "pt-BR", translationsOptions)
         .getData();
 
       if (translations.isEmpty()) break;

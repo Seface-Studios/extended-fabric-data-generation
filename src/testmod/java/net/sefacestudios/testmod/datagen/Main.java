@@ -21,6 +21,10 @@ public class Main implements DataGeneratorEntrypoint {
     pack.addProvider(ModForgeBiomeModifierProvider::new);
     pack.addProvider((o, rf) -> new ModForgeBiomeModifierProvider(o, rf).setForgedModLoader(ForgedModLoaders.NEOFORGE));
 
+    CrowdinLanguageProvider.setToken(System.getenv("CROWDIN_TOKEN"));
+    CrowdinLanguageProvider.setProjectId(System.getenv("CROWDIN_PROJECT_ID"));
+    CrowdinLanguageProvider.setOrganization(System.getenv("CROWDIN_ORGANIZATION"));
+
     pack.addProvider(CrowdinLanguageProvider::defaultLanguage);
     pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "pt_br", "pt-BR"));
     //pack.addProvider((o, rf) -> CrowdinLanguageProvider.language(o, rf, "be_by", "be"));
